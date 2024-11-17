@@ -14,20 +14,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     if ($id) {
-        $baseDatos = new Database();
-        $db = $baseDatos->getConnection();
+        $baseDatos = new BaseDatos();
+        $db = $baseDatos->obtenerConexion();
 
         $usuario = new User();
         $usuario->id = $id;
 
-        if ($usuario->get($db)) {
+        if ($usuario->obtener($db)) {
             foreach ($campos as $campo) {
                 if (!is_null($datos[$campo])) {
                     $usuario->$campo = $datos[$campo];
                 }
             }
 
-            if ($usuario->update($db)) {
+            if ($usuario->actualizar($db)) {
                 $respuesta["exito"] = true;
                 $respuesta["mensaje"] = "Usuario actualizado correctamente.";
             } else {

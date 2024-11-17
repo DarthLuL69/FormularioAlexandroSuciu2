@@ -10,3 +10,7 @@
 {"id":null,"nombre":"Javier","apellidos":"","password":"","telefono":"","email":"","sexo":"","fecha_nacimiento":""}
 {"id":null,"nombre":"Alexandro","apellidos":"Suciu Peici","password":"12312312312","telefono":"666831936","email":"phancer666@gmail.com","sexo":"","fecha_nacimiento":""}
 {"id":null,"nombre":"Lorenzo","apellidos":"Suciu Peici","contrase\u00f1a":null,"telefono":"666831936","email":"phancer666@gmail.com","sexo":"","fecha_nacimiento":""}
+{"id":null,"nombre":"Alexandro","apellidos":"Suciu Peici","contrase\u00f1a":"123456","telefono":"666831936","email":"phancer666@gmail.com","sexo":"hombre","fecha_nacimiento":"2024-11-22"}
+{"id":null,"nombre":"Alexandro","apellidos":"Suciu Peici","contrase\u00f1a":"123456","telefono":"666831936","email":"phancer666@gmail.com","sexo":"hombre","fecha_nacimiento":"2024-11-22"}
+{"id":null,"nombre":"Alexandro","apellidos":"Suciu Peici","contrase\u00f1a":"123456","telefono":"666831936","email":"phancer666@gmail.com","sexo":"hombre","fecha_nacimiento":"2024-11-22"}
+{"id":null,"nombre":"Lorenzo","apellidos":"Suciu Peici","contrase\u00f1a":null,"telefono":"666831936","email":"phancer666@gmail.com","sexo":"","fecha_nacimiento":""}

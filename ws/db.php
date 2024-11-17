@@ -1,20 +1,20 @@
 <?php
-class Database {
+class BaseDatos {
     private $host = 'localhost';
     private $db_name = 'colegio';
-    private $username = 'root';
-    private $password = '';
-    public $conn;
+    private $user = 'root';
+    private $contraseña = '';
+    public $conexion;
 
-    public function getConnection() {
-        $this->conn = null;
+    public function obtenerConexion() {
+        $this->conexion = null;
         try {
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->exec("set names utf8");
+            $this->conexion = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->user, $this->contraseña);
+            $this->conexion->exec("set names utf8");
         } catch(PDOException $exception) {
-            echo "Connection error: " . $exception->getMessage();
+            echo "Error de conexión: " . $exception->getMessage();
         }
-        return $this->conn;
+        return $this->conexion;
     }
 }
 ?>

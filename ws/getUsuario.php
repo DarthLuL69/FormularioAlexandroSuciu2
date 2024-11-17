@@ -4,8 +4,8 @@ require_once __DIR__ . '/models/User.php';
 
 $respuesta = ["exito" => false, "mensaje" => "", "datos" => null];
 
-$baseDatos = new Database();
-$db = $baseDatos->getConnection();
+$baseDatos = new BaseDatos();
+$db = $baseDatos->obtenerConexion();
 
 $usuario = new User();
 
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 
     if ($id) {
         $usuario->id = $id;
-        $datosUsuario = $usuario->get($db);
+        $datosUsuario = $usuario->obtener($db);
         if ($datosUsuario) {
             $respuesta["exito"] = true;
             $respuesta["mensaje"] = "Usuario obtenido correctamente.";

@@ -12,15 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $datos[$campo] = $_POST[$campo] ?? null;
     }
 
-    $baseDatos = new Database();
-    $db = $baseDatos->getConnection();
+    $baseDatos = new BaseDatos();
+    $db = $baseDatos->obtenerConexion();
 
     $usuario = new User(...$datos);
 
-    if ($usuario->create($db)) {
+    if ($usuario->crear($db)) {
         $respuesta["exito"] = true;
         $respuesta["mensaje"] = "Usuario creado con éxito.";
-        $respuesta["datos"] = json_decode($usuario->toJson(), true);
+        $respuesta["datos"] = json_decode($usuario->aJson(), true);
     } else {
         $respuesta["mensaje"] = "Error al crear el usuario.";
     }
