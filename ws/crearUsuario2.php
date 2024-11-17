@@ -1,5 +1,6 @@
 <?php
 
+require_once 'db.php';
 require_once __DIR__ . '/models/User.php';
 
 $respuesta = ["exito" => false, "mensaje" => "", "datos" => null];
@@ -11,13 +12,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $datos[$campo] = $_POST[$campo] ?? null;
     }
 
+    $baseDatos = new Database();
+    $db = $baseDatos->getConnection();
+
     $usuario = new User(...$datos);
 
-    $jsonDatosUsuario = $usuario->toJson();
-    if (file_put_contents('usuarios.txt', $jsonDatosUsuario . PHP_EOL, FILE_APPEND)) {
+    if ($usuario->create($db)) {
         $respuesta["exito"] = true;
         $respuesta["mensaje"] = "Usuario creado con éxito.";
-        $respuesta["datos"] = json_decode($jsonDatosUsuario, true);
+        $respuesta["datos"] = json_decode($usuario->toJson(), true);
     } else {
         $respuesta["mensaje"] = "Error al crear el usuario.";
     }

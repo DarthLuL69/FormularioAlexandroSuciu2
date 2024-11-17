@@ -1,5 +1,7 @@
 <?php
-interface IToJson {
+
+interface IToJson
+{
     public function toJson();
 }
 ?>
