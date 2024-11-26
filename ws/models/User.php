@@ -46,9 +46,13 @@ class User implements IToJson
         $consulta = "INSERT INTO alumno (nombre, apellidos, contraseña, telefono, email, sexo, fecha_nacimiento) 
                   VALUES (:nombre, :apellidos, :contraseña, :telefono, :email, :sexo, :fecha_nacimiento)";
         $stmt = $db->prepare($consulta);
-        foreach (get_object_vars($this) as $clave => $valor) {
-            $stmt->bindParam(":$clave", $this->$clave);
-        }
+        $stmt->bindParam(':nombre', $this->nombre);
+        $stmt->bindParam(':apellidos', $this->apellidos);
+        $stmt->bindParam(':contraseña', $this->contraseña);
+        $stmt->bindParam(':telefono', $this->telefono);
+        $stmt->bindParam(':email', $this->email);
+        $stmt->bindParam(':sexo', $this->sexo);
+        $stmt->bindParam(':fecha_nacimiento', $this->fecha_nacimiento);
         return $stmt->execute();
     }
 
@@ -77,6 +81,14 @@ class User implements IToJson
         $stmt = $db->prepare($consulta);
         $stmt->bindParam(':id', $this->id);
         return $stmt->execute();
+    }
+
+    public function getAll($db)
+    {
+        $consulta = "SELECT * FROM alumno";
+        $stmt = $db->prepare($consulta);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 ?>

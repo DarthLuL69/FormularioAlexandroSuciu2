@@ -6,7 +6,7 @@ require_once __DIR__ . '/models/User.php';
 $respuesta = ["exito" => false, "mensaje" => "", "datos" => null];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $id = $_GET['id'] ?? '';
+    $id = $_POST['id'] ?? '';
     $campos = ['nombre', 'apellidos', 'contraseña', 'telefono', 'email', 'sexo', 'fecha_nacimiento'];
     $datos = [];
     foreach ($campos as $campo) {
