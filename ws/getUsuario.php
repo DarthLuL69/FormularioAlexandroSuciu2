@@ -22,15 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         } else {
             $respuesta["mensaje"] = "Usuario con id $id no se encuentra en la bd.";
         }
-    } else {
-        $datosUsuarios = $usuario->getAll($db);
-        if ($datosUsuarios) {
-            $respuesta["exito"] = true;
-            $respuesta["mensaje"] = "Usuarios obtenidos correctamente.";
-            $respuesta["datos"] = $datosUsuarios;
-        } else {
-            $respuesta["mensaje"] = "No se encontraron usuarios.";
-        }
     }
 }
 
