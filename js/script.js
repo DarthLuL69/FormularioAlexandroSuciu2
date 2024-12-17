@@ -1,13 +1,15 @@
 window.onload = function() {
     const cuerpoTablaUsuarios = document.getElementById('userTable').getElementsByTagName('tbody')[0];
     const inputFiltro = document.getElementById('filterInput');
+    let usuarios = [];
 
     async function cargarUsuarios() {
         try {
             const response = await fetch('ws/getUsuarios.php');
             const result = await response.json();
             if (result.success) {
-                llenarTabla(result.usuarios);
+                usuarios = result.usuarios;
+                llenarTabla(usuarios);
             } else {
                 Swal.fire('Error', result.message, 'error');
             }
@@ -26,7 +28,8 @@ window.onload = function() {
                 <td>${usuario.telefono}</td>
                 <td>${usuario.email}</td>
                 <td>${usuario.sexo}</td>
-                <td>${usuario.direccion}</td>
+                <td>${usuario.fecha_nacimiento}</td>
+                <td>${usuario.contraseña}</td>
                 <td>
                     <button class="botonEditar" data-index="${indice}">Editar</button>
                     <button class="botonEliminar" data-index="${indice}">X</button>
@@ -92,8 +95,10 @@ window.onload = function() {
                 <input type="tel" id="editTelefono" name="telefono" value="${usuario.telefono}"><br><br>
                 <label for="editEmail">Email:</label><br>
                 <input type="email" id="editEmail" name="email" value="${usuario.email}"><br><br>
-                <label for="editDireccion">Dirección:</label><br>
-                <input type="text" id="editDireccion" name="direccion" value="${usuario.direccion}"><br><br>
+                <label for="editFechaNacimiento">Fecha de Nacimiento:</label><br>
+                <input type="date" id="editFechaNacimiento" name="fecha_nacimiento" value="${usuario.fecha_nacimiento}"><br><br>
+                <label for="editContraseña">Contraseña:</label><br>
+                <input type="password" id="editContraseña" name="contraseña" value="${usuario.contraseña}"><br><br>
                 <label>Sexo:</label><br>
                 <input type="radio" id="editHombre" name="sexo" value="Hombre" ${usuario.sexo === 'Hombre' ? 'checked' : ''}>
                 <label for="editHombre">Hombre</label><br>
@@ -109,23 +114,29 @@ window.onload = function() {
     window.guardarEdicion = async function(indice) {
         const formulario = document.getElementById('editForm');
         const usuario = {
-            id: formulario.id.value,
+            id: usuarios[indice].id,
             nombre: formulario.nombre.value,
             apellidos: formulario.apellidos.value,
             telefono: formulario.telefono.value,
             email: formulario.email.value,
             sexo: formulario.sexo.value,
-            direccion: formulario.direccion.value
+            fecha_nacimiento: formulario.fecha_nacimiento.value,
+            contraseña: formulario.contraseña.value
         };
         try {
-            await fetch(`ws/updateUser.php?id=${usuario.id}`, {
+            const response = await fetch(`ws/updateUser.php?id=${usuario.id}`, {
                 method: 'POST',
                 body: JSON.stringify(usuario),
                 headers: { 'Content-Type': 'application/json' }
             });
-            Swal.fire('Actualizado', 'El usuario ha sido actualizado', 'success');
-            cargarUsuarios();
-            formulario.remove();
+            const result = await response.json();
+            if (result.success) {
+                Swal.fire('Actualizado', 'El usuario ha sido actualizado', 'success');
+                cargarUsuarios();
+                formulario.remove();
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
         } catch (error) {
             Swal.fire('Error', 'No se pudo actualizar el usuario', 'error');
         }
