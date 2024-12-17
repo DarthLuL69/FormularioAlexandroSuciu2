@@ -5,10 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario de Registro</title>
     <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
     <script src="js/nav.js" defer></script>
+    <script src="js/formulario.js" defer></script>
 </head>
 <body>
-    <form action="ws/crearUser.php" method="post">
+    <nav></nav>
+    <form id="userForm" action="ws/crearUsuario2.php" method="post">
         <label for="nombre">Nombre:</label><br>
         <input type="text" id="nombre" name="nombre"><br><br>
 

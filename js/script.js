@@ -2,12 +2,19 @@ window.onload = function() {
     const cuerpoTablaUsuarios = document.getElementById('userTable').getElementsByTagName('tbody')[0];
     const inputFiltro = document.getElementById('filterInput');
 
-    const usuarios = [
-        { nombre: 'Timberland', apellidos: 'Martínez', telefono: '111222333', email: 'timberland@gmail.com', sexo: 'Hombre', direccion: 'San Jose Obrero 21, 3D' },
-        { nombre: 'Gucci', apellidos: 'Gucci', telefono: '444555666', email: 'navidad@gmail.com', sexo: 'Mujer', direccion: 'Avenida Camioneta' },
-        { nombre: 'David', apellidos: 'Muñoz', telefono: '777888999', email: 'tuperiquitofavorito@hotmail.com', sexo: 'Hombre', direccion: 'Azulejo' },
-        { nombre: 'Dario', apellidos: 'Soñier', telefono: '000111222', email: 'fernandoalonso2@campico.org', sexo: 'Mujer', direccion: 'Avion' }
-    ];
+    async function cargarUsuarios() {
+        try {
+            const response = await fetch('ws/getUsuarios.php');
+            const result = await response.json();
+            if (result.success) {
+                llenarTabla(result.usuarios);
+            } else {
+                Swal.fire('Error', result.message, 'error');
+            }
+        } catch (error) {
+            Swal.fire('Error', 'No se pudieron cargar los usuarios', 'error');
+        }
+    }
 
     function llenarTabla(datos) {
         cuerpoTablaUsuarios.innerHTML = '';
@@ -22,22 +29,40 @@ window.onload = function() {
                 <td>${usuario.direccion}</td>
                 <td>
                     <button class="botonEditar" data-index="${indice}">Editar</button>
-                    <button class="botonEliminar">X</button>
+                    <button class="botonEliminar" data-index="${indice}">X</button>
                 </td>
             `;
             cuerpoTablaUsuarios.appendChild(fila);
         });
 
         document.querySelectorAll('.botonEliminar').forEach(boton => {
-            boton.onclick = function() {
-                this.closest('tr').remove();
+            boton.onclick = async function() {
+                const indice = this.dataset.index;
+                const usuario = datos[indice];
+                const result = await Swal.fire({
+                    title: '¿Estás seguro?',
+                    text: `¿Quieres eliminar a ${usuario.nombre} ${usuario.apellidos}?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar'
+                });
+                if (result.isConfirmed) {
+                    try {
+                        await fetch(`ws/deleteUser.php?id=${usuario.id}`, { method: 'DELETE' });
+                        Swal.fire('Eliminado', 'El usuario ha sido eliminado', 'success');
+                        cargarUsuarios();
+                    } catch (error) {
+                        Swal.fire('Error', 'No se pudo eliminar el usuario', 'error');
+                    }
+                }
             };
         });
 
         document.querySelectorAll('.botonEditar').forEach(boton => {
             boton.onclick = function() {
                 const indice = this.dataset.index;
-                mostrarFormularioEdicion(usuarios[indice], indice);
+                mostrarFormularioEdicion(datos[indice], indice);
             };
         });
     }
@@ -80,9 +105,11 @@ window.onload = function() {
         `;
         document.body.insertAdjacentHTML('beforeend', formularioHtml);
     }
-    window.guardarEdicion = function(indice) {
+
+    window.guardarEdicion = async function(indice) {
         const formulario = document.getElementById('editForm');
-        usuarios[indice] = {
+        const usuario = {
+            id: formulario.id.value,
             nombre: formulario.nombre.value,
             apellidos: formulario.apellidos.value,
             telefono: formulario.telefono.value,
@@ -90,8 +117,18 @@ window.onload = function() {
             sexo: formulario.sexo.value,
             direccion: formulario.direccion.value
         };
-        llenarTabla(usuarios);
-        formulario.remove();
+        try {
+            await fetch(`ws/updateUser.php?id=${usuario.id}`, {
+                method: 'POST',
+                body: JSON.stringify(usuario),
+                headers: { 'Content-Type': 'application/json' }
+            });
+            Swal.fire('Actualizado', 'El usuario ha sido actualizado', 'success');
+            cargarUsuarios();
+            formulario.remove();
+        } catch (error) {
+            Swal.fire('Error', 'No se pudo actualizar el usuario', 'error');
+        }
     };
 
     window.cancelarEdicion = function() {
@@ -101,6 +138,6 @@ window.onload = function() {
         }
     };
 
-    llenarTabla(usuarios);
+    cargarUsuarios();
     inputFiltro.oninput = filtrarTabla;
 };
