@@ -22,4 +22,6 @@ if ($result->num_rows > 0) {
     echo json_encode(['success' => true, 'usuarios' => $usuarios]);
 } else {
     echo json_encode(['success' => false, 'message' => 'No users found']);
-}$conn->close();?>
+}
+$conn->close();
+?>
